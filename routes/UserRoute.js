@@ -32,30 +32,9 @@ router.post('/',(req,res)=>{
 router.route('/:id')
   // READ
   .get((req,res)=>{
-    User.findById(req.params.id, (err,data)=>{
-      if(err){
-        res.json(
-          {
-            success : false,
-            message: err
-          }
-        )
-      } else if(!data){
-        res.json(
-          {
-            success: false,
-            message : "User Not Found"
-          }
-        )
-      } else {
-        res.json(
-          {
-            success: true,
-            data: data
-          }
-        )
-      }
-    })
+    User.findById(req.params.id, (err,data)=>
+      {sendResponse(res, err, data)}
+    )
   })
   // UPDATE
   .put((req,res)=>{
@@ -69,49 +48,34 @@ router.route('/:id')
       {
         new:true
       },
-      (err,data)=>{
-        if (err){
-          res.json({
-            success: false,
-            message: err
-          })
-        } else if (!data){
-          res.json({
-            success: false,
-            message: "Not Found"
-          })
-        } else {
-          res.json({
-            success: true,
-            data: data
-          })
-        }
-      }
+      (err,data)=>{sendResponse(res, err, data)}
     )
   })
   // DELETE
   .delete((req,res)=>{
     User.findByIdAndDelete(
       req.params.id,
-      (err,data)=>{
-        if (err){
-          res.json({
-            success: false,
-            message: err
-          })
-        } else if (!data){
-          res.json({
-            success: false,
-            message: "Not Found"
-          })
-        } else {
-          res.json({
-            success: true,
-            data: data
-          })
-        }
-      }
+      (err,data)=>{sendResponse(res, err, data)}
     )
   });
+
+  function sendResponse(res, err, data){
+    if (err){
+      res.json({
+        success: false,
+        message: err
+      })
+    } else if (!data){
+      res.json({
+        success: false,
+        message: "Not Found"
+      })
+    } else {
+      res.json({
+        success: true,
+        data: data
+      })
+    }
+  }
 
   module.exports = router ;
