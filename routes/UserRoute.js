@@ -1,12 +1,22 @@
 const express = require('express');
 var router = express.Router();
 
+const dbconfig = require("../config/db.config");
+
+require('dotenv').config();
+
 const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 
 const mongoose= require('mongoose');
 const User = require('../models/User');
-mongoose.connect('mongodb://localhost:27017/userData')
+mongoose.connect(dbconfig.url, {useNewUrlParser: true, useUnifiedTopology:true})
+.then(()=>console.log("Connected to database"))
+.catch(err=>{
+  console.log("could not connect to " + dbconfig.url);
+  console.log("Cannot connect to the databaseerr!", err);
+  process.exit();
+});
 
   // CREATE
 router.post('/',(req,res)=>{
